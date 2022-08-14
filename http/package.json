@@ -1,0 +1,50 @@
+{
+    "name": "nuxtjs-custom-http",
+    "version": "1.1.9",
+    "description": "An extended module to Nuxt 3 $fetch",
+    "homepage": "https://github.com/max5432112345/nuxt-custom",
+    "author": "max5432112345",
+    "keywords": [
+        "nuxt",
+        "nuxtjs",
+        "nuxt-module",
+        "nuxt-plugin",
+        "nuxt-custom",
+        "ohmyfetch",
+        "@nuxtjs/http",
+        "@nuxtjs/axios"
+    ],
+    "license": "MIT",
+    "type": "module",
+    "main": "./dist/module.mjs",
+    "module": "./dist/module.mjs",
+    "commonjs": "./dist/module.cjs",
+    "types": "./dist/types.d.ts",
+    "typings": "./dist/types.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "dev": "nuxi dev playground",
+        "dev:build": "nuxi build playground",
+        "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground"
+    },
+    "dependencies": {
+        "@nuxt/kit": "^3.0.0-rc.6",
+        "defu": "^6.0.0"
+    },
+    "devDependencies": {
+        "@nuxt/module-builder": "latest",
+        "@types/node": "latest",
+        "eslint": "latest",
+        "nuxt": "^3.0.0-rc.6"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/max5432112345/nuxt-custom.git",
+        "directory": "nuxtjs-custom-http"
+    },
+    "bugs": {
+        "url": "https://github.com/max5432112345/nuxt-custom/issues"
+    }
+}
