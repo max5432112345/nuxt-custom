@@ -2,7 +2,6 @@ import { defineNuxtModule, createResolver, addPluginTemplate, addAutoImport } fr
 
 const name = "@nuxtjs-custom/http";
 const version = "1.1.9";
-
 const CONFIG_KEY = "http";
 const module = defineNuxtModule({
   meta: {
@@ -19,12 +18,9 @@ const module = defineNuxtModule({
       ..._moduleOptions,
       ...nuxt.options.runtimeConfig.public && nuxt.options.runtimeConfig.public[CONFIG_KEY]
     };
-    const defaultPort = process.env.API_PORT || moduleOptions.port || process.env.PORT || process.env.npm_package_config_nuxt_port || nuxt.options.server && nuxt.options.server.port || 3e3;
-    let defaultHost = process.env.API_HOST || moduleOptions.host || process.env.HOST || process.env.npm_package_config_nuxt_host || nuxt.options.server && nuxt.options.server.host || "localhost";
-    if (defaultHost === "0.0.0.0") {
-      defaultHost = "localhost";
-    }
-    const prefix = process.env.API_PREFIX || moduleOptions.prefix || "/";
+
+    // console.log(nuxt.options.runtimeConfig, nuxt.options.app, nuxt.options.server.port)
+
     const https = Boolean(nuxt.options.server && nuxt.options.server.https);
     if (moduleOptions.baseUrl) {
       moduleOptions.baseURL = moduleOptions.baseUrl;
@@ -35,7 +31,7 @@ const module = defineNuxtModule({
       delete moduleOptions.browserBaseUrl;
     }
     const options = {
-      baseURL: `http://${defaultHost}:${defaultPort}${prefix}`,
+      baseURL: nuxt.options.app.baseURL,
       browserBaseURL: void 0,
       proxyHeaders: true,
       proxyHeadersIgnore: [

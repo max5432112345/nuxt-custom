@@ -152,7 +152,7 @@ export default defineEventHandler(async (event) => {
                 data = qs.stringify(data)
                 headers['Content-Type'] = 'application/x-www-form-urlencoded'
             }
-            $http.create().$post({
+            $http.$post({
               url: options.tokenEndpoint.url,
               body: data,
               headers,
@@ -223,7 +223,7 @@ export default defineEventHandler(async (event) => {
             if (data.grant_type === 'refresh_token' && !data.refresh_token) {
                 return next(new Error('Refresh token not provided'))
             }
-            $http.create().$post({
+            $http.$post({
               url: options.tokenEndpoint.url,
               baseURL: requrl(event.req),
               body: {

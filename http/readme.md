@@ -8,9 +8,9 @@ This works similar to nuxt/http and nuxtjs-alt/axios except it utilizes Nuxt 3 $
 
 If you want to experiment you may use the `useConflict: true` property to change `$http`, `useHttp`, `useLazyHttp`, `globalThis.$http`, to `$fetch`, `useFetch`, `useLazyFetch`, `globalThis.$fetch`.
 
-Remember this is a mix of `$fetch`, `nuxt/axios` and `nuxt/http` so to use methods you would use eg. `$fetch.$get(<url>, <options>) | $http.$get(<url>, <options>)` or `$fetch.get(<url>, <options>) | $http.get(<url>, <options>)` all options relative to `ohmyfetch` can be registered as a secondary parameter within the method. Or `this.ctx.$fetch.create().$get(<url>, <options>) | this.ctx.$http.create().$get(<url>, <options>)`.
+Remember this is a mix of `$fetch`, `nuxt/axios` and `nuxt/http` so to use methods you would use eg. `$fetch.$get(<options>) | $http.$get(<options>)`, options are the same as of `ohmyfetch` but also includes url. Or `this.ctx.$fetch.$get(<options>) | this.ctx.$http.$get(<options>)`.
 
-Using the `$` (eg. `$http.$get()`) or `$fetch.create()` are the same.
+Using without the `$` (eg. `$http.get()`) are the same with `$fetch.raw()` .
 
 **Interceptors**
 

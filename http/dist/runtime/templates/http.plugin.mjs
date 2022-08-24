@@ -24,7 +24,7 @@ class HttpInstance {
     #createMethods() {
         for (let method of ['get', 'head', 'delete', 'post', 'put', 'patch', 'options']) {
             Object.assign(this.__proto__, {
-                [method]: (options) =>  {
+                ['$' + method]: async (options) => {
                     const config = defu(options, this.getDefaultConfig())
                     config.url = options.url
                     config.method = method
@@ -33,176 +33,76 @@ class HttpInstance {
                         config.params = cleanParams(options.params)
                     }
 
-                    if (/^https?/.test(options.url)) {
+                    if (/^http?/.test(options.url)) {
                         delete config.baseURL
                     }
 
-                    const requestInterceptorChain = [];
-                    let synchronousRequestInterceptors = true;
-
-                    this.interceptors.request.forEach((interceptor) => {
+                    // filter out skipped interceptors
+                    const requestInterceptorChain = []
+                    let synchronousRequestInterceptors = true
+                    this.interceptors.request.forEach(function unshiftRequestInterceptors(interceptor) {
                         if (typeof interceptor.runWhen === 'function' && interceptor.runWhen(config) === false) {
-                            return;
+                            return
                         }
 
-                        synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
+                        synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous
+                        requestInterceptorChain.unshift(interceptor.fulfilled, interceptor.rejected)
+                    })
 
-                        requestInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
-                    });
+                    const responseInterceptorChain = []
+                    this.interceptors.response.forEach(function pushResponseInterceptors(interceptor) {
+                        responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected)
+                    })
 
-                    const responseInterceptorChain = [];
-                    this.interceptors.response.forEach((interceptor) => {
-                        responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
-                    });
-
-                    let promise;
-                    let i = 0;
-                    let len;
+                    let promise
+                    let i = 0
+                    let len
 
                     if (!synchronousRequestInterceptors) {
-                        const chain = [this.#dispatchRawRequest(config), undefined];
-                        chain.push.apply(chain, requestInterceptorChain);
-                        chain.push.apply(chain, responseInterceptorChain);
-                        len = chain.length;
+                        const chain = [this.#dispatchRequest.bind(this), undefined]
+                        chain.unshift.apply(chain, requestInterceptorChain)
+                        chain.push.apply(chain, responseInterceptorChain)
+                        len = chain.length
 
-                        promise = Promise.resolve(config);
-
-                        while (i < len) {
-                            promise = promise.then(chain[i++], chain[i++]);
-                        }
-
-                        return promise;
-                    }
-
-                    len = requestInterceptorChain.length;
-
-                    let newConfig = config;
-
-                    i = 0;
-
-                    while (i < len) {
-                        const onFulfilled = requestInterceptorChain[i++];
-                        const onRejected = requestInterceptorChain[i++];
-                        try {
-                            newConfig = onFulfilled(newConfig);
-                        } catch (error) {
-                            onRejected.call(this, error);
-                            break;
-                        }
-                    }
-
-                    try {
-                        promise = this.#dispatchRawRequest(newConfig);
-                    } catch (error) {
-                        return Promise.reject(error);
-                    }
-
-                    i = 0;
-                    len = responseInterceptorChain.length;
-
-                    while (i < len) {
-                        promise = promise.then(responseInterceptorChain[i++], responseInterceptorChain[i++]);
-                    }
-
-                    return promise;
-                },
-                ['$' + method]: (options) => {
-                    const config = defu(options, this.getDefaultConfig())
-                    config.url = options.url
-                    config.method = method
-
-                    if (config && config.params) {
-                        config.params = cleanParams(options.params)
-                    }
-
-                    if (/^https?/.test(options.url)) {
-                        delete config.baseURL
-                    }
-
-                    const requestInterceptorChain = [];
-                    let synchronousRequestInterceptors = true;
-
-                    this.interceptors.request.forEach((interceptor) => {
-                        if (typeof interceptor.runWhen === 'function' && interceptor.runWhen(config) === false) {
-                            return;
-                        }
-
-                        synchronousRequestInterceptors = synchronousRequestInterceptors && interceptor.synchronous;
-
-                        requestInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
-                    });
-
-                    const responseInterceptorChain = [];
-                    this.interceptors.response.forEach((interceptor) => {
-                        responseInterceptorChain.push(interceptor.fulfilled, interceptor.rejected);
-                    });
-
-                    let promise;
-                    let i = 0;
-                    let len;
-
-                    if (!synchronousRequestInterceptors) {
-                        const chain = [this.#dispatchRequest(config), undefined];
-                        chain.push.apply(chain, requestInterceptorChain);
-                        chain.push.apply(chain, responseInterceptorChain);
-                        len = chain.length;
-
-                        promise = Promise.resolve(config);
+                        promise = Promise.resolve(config)
 
                         while (i < len) {
-                            promise = promise.then(chain[i++], chain[i++]);
+                            promise = promise.then(chain[i++], chain[i++])
+                        }
+                    } else {
+                        len = requestInterceptorChain.length
+                        let newConfig = config
+                        i = 0
+
+                        while (i < len) {
+                            const onFulfilled = requestInterceptorChain[i++]
+                            const onRejected = requestInterceptorChain[i++]
+                            try {
+                                newConfig = await onFulfilled(newConfig)
+                            } catch (error) {
+                                onRejected.call(this, error)
+                                break
+                            }
                         }
 
-                        return promise;
-                    }
-
-                    len = requestInterceptorChain.length;
-
-                    let newConfig = config;
-
-                    i = 0;
-
-                    while (i < len) {
-                        const onFulfilled = requestInterceptorChain[i++];
-                        const onRejected = requestInterceptorChain[i++];
                         try {
-                            newConfig = onFulfilled(newConfig);
+                            promise = this.#dispatchRequest.call(this, newConfig)
                         } catch (error) {
-                            onRejected.call(this, error);
-                            break;
+                            return Promise.reject(error)
+                        }
+
+                        i = 0
+                        len = responseInterceptorChain.length
+
+                        while (i < len) {
+                            promise = promise.then(responseInterceptorChain[i++], responseInterceptorChain[i++])
                         }
                     }
 
-                    try {
-                        promise = this.#dispatchRequest(newConfig);
-                    } catch (error) {
-                        return Promise.reject(error);
-                    }
-
-                    i = 0;
-                    len = responseInterceptorChain.length;
-
-                    while (i < len) {
-                        promise = promise.then(responseInterceptorChain[i++], responseInterceptorChain[i++]);
-                    }
-
-                    return promise;
+                    return promise
                 }
             })
         }
-    }
-
-    #dispatchRawRequest = (config) => {
-        const controller = new AbortController();
-        const timeoutSignal = setTimeout(() => controller.abort(), config.timeout);
-        let instance = getFetch()
-        clearTimeout(timeoutSignal);
-        return instance(config.url, {
-            key: 'dispatchRawRequest',
-            method: config.method,
-            signal: controller.signal,
-            ...config
-        })
     }
 
     #dispatchRequest = (config) => {

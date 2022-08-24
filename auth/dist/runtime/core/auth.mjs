@@ -190,14 +190,15 @@ export class Auth {
       console.error("[AUTH] add the @nuxtjs/http module to nuxt.config file");
       return;
     }
+
     if (_endpoint.method.toLowerCase() === 'get') {
-      return this.ctx.$http.create().$get(_endpoint)
+      return this.ctx.$http.$get(_endpoint)
         .catch((error) => {
           this.callOnError(error, { method: "request" });
           return Promise.reject(error);
         });
     } else if (_endpoint.method.toLowerCase() === 'post') {
-      return this.ctx.$http.create().$post({
+      return this.ctx.$http.$post({
           body: {
             email: _endpoint.email,
             password: _endpoint.password

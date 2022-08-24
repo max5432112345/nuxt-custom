@@ -160,7 +160,7 @@ export default defineEventHandler(async (event) => {
                 data = qs.stringify(data)
                 headers['Content-Type'] = 'application/x-www-form-urlencoded'
             }
-            $http.create().$post({
+            $http.$post({
               body: data,
               headers,
               method: 'post',
@@ -232,7 +232,7 @@ export default defineEventHandler(async (event) => {
                 return next(new Error('Refresh token not provided'))
             }
 
-            $http.create().$post({
+            $http.$post({
               baseURL: requrl(event.req),
               body: {
                   client_id: options.clientId,
