@@ -1,8 +1,13 @@
 **Information**
 
-This module is an adaptation of `https://github.com/Teranode/nuxt-module-alternatives/tree/master/%40nuxtjs-alt/http` to use $fetch instead axios, http or ohmyfetch.
-This serves as an alternative to `@nuxtjs/axios`, `@nuxtjs/http`. Please note this is only for nuxt3.
-This works similar to nuxt/http and nuxtjs-alt/axios except it utilizes Nuxt 3 $fetch. All property options will be under `http`
+This module is an adaptation of `https://github.com/Teranode/nuxt-module-alternatives/tree/master/%40nuxtjs-alt/http` 
+to work with Nuxt $fetch and can be used with Nuxt 3 in the same way appropiate nuxt/axios and nuxt/http in nuxt 2.
+
+At creation time Teranode's module dosen't supported $fetch, but only his adaptation of `@nuxtjs/http` for nuxt 3 (^rc.9).
+Now you can use Teranode's, because it also use $fetch and have some emprovements.
+
+This will only work with pinia and Nuxt 3 $fetch.
+
 
 **Other Information**
 

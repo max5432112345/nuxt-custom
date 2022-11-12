@@ -7,7 +7,7 @@ import { addTemplate, addServerHandler, resolvePath, requireModule, defineNuxtMo
 import { getAuthPlugin } from './plugin.mjs';
 
 const name = "@nuxtjs-custom/auth";
-const version = "1.2.12";
+const version = "1.2.14";
 
 function assignDefaults(strategy, defaults) {
   Object.assign(strategy, defu(strategy, defaults));
@@ -593,7 +593,7 @@ const module = defineNuxtModule({
     version,
     configKey: CONFIG_KEY,
     compatibility: {
-      nuxt: "^3.0.0"
+      nuxt: "^3.0.0-rc.9"
     }
   },
   defaults: moduleDefaults,

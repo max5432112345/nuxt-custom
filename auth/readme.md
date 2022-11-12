@@ -1,11 +1,13 @@
 **Information**
 
-This module is an adaptation of `https://github.com/Teranode/nuxt-module-alternatives/tree/master/%40nuxtjs-alt/auth` to work with Nuxt $fetch (instad nuxt/axios is replaced with $fetch by module `https://github.com/max5432112345/nuxt-custom/http`).
-This module is meant as an alternative to @nuxtjs/auth, except this is for nuxt3 only with no backwards compatibility support. This will only work with pinia and Nuxt 3 $fetch. I'm still working on this.
+This module is an adaptation of `https://github.com/Teranode/nuxt-module-alternatives/tree/master/%40nuxtjs-alt/auth` 
+to work with Nuxt $fetch (instead nuxt/axios is used module `https://github.com/max5432112345/nuxt-custom/http` which deal with $fetch).
 
-**Typescript**
+At creation time Teranode's module dosen't supported $fetch, but only his adaptation of `@nuxtjs/http` for nuxt 3 (^rc.9).
+Now you can use Teranode's, because it also use $fetch and have some emprovements.
 
-Please note, any issues regarding typescript is not a priorty for me. If you're having issues with it it'll be noted but not a priority, I normally have typescript disabled to focus on the functionality of the module.
+This will only work with pinia and Nuxt 3 $fetch.
+
 
 **Cookie-based auth**
 
