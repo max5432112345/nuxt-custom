@@ -1,7 +1,7 @@
 import { defineNuxtModule, createResolver, addPluginTemplate, addAutoImport } from '@nuxt/kit';
 
 const name = "@nuxtjs-custom/http";
-const version = "1.1.9";
+const version = "1.1.11";
 const CONFIG_KEY = "http";
 const module = defineNuxtModule({
   meta: {
@@ -9,7 +9,7 @@ const module = defineNuxtModule({
     version,
     configKey: CONFIG_KEY,
     compatibility: {
-      nuxt: "^3.0.0"
+      nuxt: "^3.0.0-rc.9"
     }
   },
   defaults: {},
@@ -18,8 +18,6 @@ const module = defineNuxtModule({
       ..._moduleOptions,
       ...nuxt.options.runtimeConfig.public && nuxt.options.runtimeConfig.public[CONFIG_KEY]
     };
-
-    // console.log(nuxt.options.runtimeConfig, nuxt.options.app, nuxt.options.server.port)
 
     const https = Boolean(nuxt.options.server && nuxt.options.server.https);
     if (moduleOptions.baseUrl) {

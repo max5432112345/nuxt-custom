@@ -1,9 +1,9 @@
 {
     "name": "nuxtjs-custom-http",
-    "version": "1.1.9",
-    "description": "An extended module to Nuxt 3 $fetch",
+    "version": "1.1.11",
+    "description": "An extended module to Nuxt 3 (^rc.9) $fetch",
     "homepage": "https://github.com/max5432112345/nuxt-custom",
-    "author": "max5432112345",
+    "author": "Teranode, Max5432112345",
     "keywords": [
         "nuxt",
         "nuxtjs",
@@ -30,14 +30,14 @@
         "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground"
     },
     "dependencies": {
-        "@nuxt/kit": "^3.0.0-rc.6",
+        "@nuxt/kit": "^3.0.0-rc.9",
         "defu": "^6.0.0"
     },
     "devDependencies": {
         "@nuxt/module-builder": "latest",
         "@types/node": "latest",
         "eslint": "latest",
-        "nuxt": "^3.0.0-rc.6"
+        "nuxt": "^3.0.0-rc.9"
     },
     "repository": {
         "type": "git",
